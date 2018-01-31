@@ -1,0 +1,155 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Programming Test - Pattern Recognition
+  description: >-
+    Api for Programming Test - Pattern Recognition: Statement: given a set of P
+    feature points in the bidimensional plane, determine every line that
+    contains at least N or more COLLINEAR points.
+  termsOfService: 'http://helloreverb.com/terms/'
+  contact:
+    name: Gabriele Mannfredi
+    email: gabriele.manfredi@hotmail.it
+  license:
+    name: MIT
+    url: 'http://opensource.org/licenses/MIT'
+host: madlabs.it
+basePath: /api
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /point:
+    post:
+      description: |
+        Add a point to the space
+        POST/point 
+        with body { "x": ..., "y": ... }
+      operationId: addPoint
+      produces:
+        - application/json
+      parameters:
+        - name: point
+          in: body
+          description: a point to add to the space
+          required: true
+          schema:
+            $ref: '#/definitions/point'
+      responses:
+        '201':
+          description: added point
+          schema:
+            $ref: '#/definitions/point'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+    get:
+      description: |
+        Get all points in the space
+
+        GET /space
+
+        Example response
+        [
+          {"x": 2, "y": 3},
+          {"x": -2, "y": 1023},
+          {"x": 3.2, "y": 0},
+        ...
+        ]
+      operationId: allPoints
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: all points present in the space
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/point'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+    delete:
+      description: |
+        Remove all points from the space
+        DELETE /space
+      operationId: deleteAllPoints
+      responses:
+        '204':
+          description: all points deleted
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+  /point/lines/{n}:
+    get:
+      description: |
+        Get all line segments passing through at least 
+        N points. Note that a line segment should be a 
+        set of COLLINEAR points.
+
+        GET /lines/{n}
+
+        Example
+        Request: GET /lines/2
+          [
+            [
+              {"x": 2, "y": 3},
+              {"x": -2, "y": 1023}
+            ],
+            [
+              {"x": 3.2, "y": 0},
+              {"x": -2, "y": 1023}
+            ],
+          ...
+          ]
+      operationId: allCollinearPoints
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: 'n'
+          description: number of COLLINEAR segments
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: set of COLLINEAR points
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/point'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+definitions:
+  point:
+    type: object
+    required:
+      - x
+      - 'y'
+    properties:
+      x:
+        type: integer
+        format: int64
+      'y':
+        type: integer
+        format: int64
+  errorModel:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
