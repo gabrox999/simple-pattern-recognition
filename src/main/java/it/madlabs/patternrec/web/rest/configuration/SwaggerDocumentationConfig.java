@@ -1,8 +1,10 @@
 package it.madlabs.patternrec.web.rest.configuration;
 
+import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -33,7 +35,8 @@ public class SwaggerDocumentationConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                     .apis(RequestHandlerSelectors.basePackage("it.madlabs.patternrec.web.rest"))
-                    .build()
+                    .paths(Predicates.not(PathSelectors.regex("/")))
+                .build()
                 .directModelSubstitute(org.joda.time.LocalDate.class, java.sql.Date.class)
                 .directModelSubstitute(org.joda.time.DateTime.class, java.util.Date.class)
                 .apiInfo(apiInfo());

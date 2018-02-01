@@ -12,11 +12,19 @@ import java.util.Objects;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-30T20:32:37.777Z")
 
 public class Point   {
+
   @JsonProperty("x")
   private Double x = null;
 
   @JsonProperty("y")
   private Double y = null;
+
+  public Point(){}
+
+  public Point(Double x, Double y) {
+    this.x = x;
+    this.y = y;
+  }
 
   public Point x(Double x) {
     this.x = x;
@@ -81,13 +89,10 @@ public class Point   {
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class Point {\n");
-
-    sb.append("    x: ").append(toIndentedString(x)).append("\n");
-    sb.append("    y: ").append(toIndentedString(y)).append("\n");
-    sb.append("}");
-    return sb.toString();
+    return "{" +
+            "x=" + x +
+            ", y=" + y +
+            '}';
   }
 
   /**

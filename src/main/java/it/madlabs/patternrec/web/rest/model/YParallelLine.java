@@ -1,10 +1,10 @@
 package it.madlabs.patternrec.web.rest.model;
 
-public class ParallelLineToY implements Line{
+public class YParallelLine implements Line{
 
     private Double y;
 
-    public ParallelLineToY(Double y) {
+    public YParallelLine(Double y) {
         this.y = y;
     }
 
@@ -13,7 +13,7 @@ public class ParallelLineToY implements Line{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ParallelLineToY that = (ParallelLineToY) o;
+        YParallelLine that = (YParallelLine) o;
 
         return y != null ? y.equals(that.y) : that.y == null;
     }
@@ -25,7 +25,7 @@ public class ParallelLineToY implements Line{
 
     @Override
     public String toString() {
-        return "ParallelLineToY{" +
+        return "XParallelLine{" +
                 "y=" + y +
                 '}';
     }
