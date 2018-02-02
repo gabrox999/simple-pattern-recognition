@@ -21,16 +21,26 @@ import java.util.List;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-30T20:32:37.777Z")
 
 @Api(value = "", description = "the point API")
-public interface PointApi {
+public interface SpaceApi {
 
-    @ApiOperation(value = "/point", notes = "Add a point to the space POST/point  with body { \"x\": ..., \"y\": ... } ", response = Point.class, tags={  })
+    @ApiOperation(value = "/space", notes = "Get all points in the space  GET /space  Example response [   {\"x\": 2, \"y\": 3},   {\"x\": -2, \"y\": 1023},   {\"x\": 3.2, \"y\": 0}, ... ] ", response = Point.class, responseContainer = "List", tags={  })
     @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "added point to the space", response = Point.class),
-        @ApiResponse(code = 400, message = "bad parameters", response = ErrorModel.class),
+        @ApiResponse(code = 200, message = "all points present in the space", response = Point.class, responseContainer = "List"),
         @ApiResponse(code = 500, message = "Unexpected Error", response = ErrorModel.class) })
-    @RequestMapping(value = "/point",
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<Void> addPoint(@ApiParam(value = "a point to add to the space", required = true) @Valid @RequestBody Point point);
+    
+    @RequestMapping(value = "/space",
+        produces = { "application/json" },
+        method = RequestMethod.GET)
+    ResponseEntity<List<Point>> allPoints() throws ServerErrorException;
+
+
+    @ApiOperation(value = "/space", notes = "Remove all points from the space DELETE /space ", response = Void.class, tags={  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 204, message = "all points deleted", response = Void.class),
+        @ApiResponse(code = 500, message = "Unexpected Error", response = ErrorModel.class) })
+    
+    @RequestMapping(value = "/space",
+        method = RequestMethod.DELETE)
+    ResponseEntity<Void> deleteAllPoints();
 
 }

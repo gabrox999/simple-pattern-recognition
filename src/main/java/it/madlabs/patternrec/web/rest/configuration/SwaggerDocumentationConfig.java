@@ -21,7 +21,7 @@ public class SwaggerDocumentationConfig {
     ApiInfo apiInfo() {
         return new ApiInfoBuilder()
             .title("Programming Test - Pattern Recognition")
-            .description("Api for Programming Test - Pattern Recognition: Statement: given a set of P feature points in the bidimensional plane, determine every line that contains at least N or more COLLINEAR points.")
+            .description("Api for Programming Test - Pattern Recognition")
             .license("MIT")
             .licenseUrl("http://opensource.org/licenses/MIT")
             .termsOfServiceUrl("")

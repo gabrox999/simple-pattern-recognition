@@ -35,33 +35,4 @@ public class PointApiController extends AbstractRestController implements PointA
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    public ResponseEntity<List<List<Point>>> allCollinearPoints(@ApiParam(value = "number of COLLINEAR segments",required=true ) @PathVariable("n") Integer n) {
-        try {
-            return new ResponseEntity<List<List<Point>>>(pointService.allCollinearPoints(n), HttpStatus.OK);
-        } catch (IllegalArgumentException e){
-            throw new BadRequestException(e.getMessage());
-        }catch (Exception e) {
-            throw new ServerErrorException(e.getMessage());
-        }
-    }
-
-    public ResponseEntity<List<Point>> allPoints() throws ServerErrorException {
-        try {
-            List<Point> allPoints = pointService.allPoints();
-            return new ResponseEntity<List<Point>>(allPoints, HttpStatus.OK);
-        }catch (Exception e) {
-            throw new ServerErrorException(e.getMessage());
-        }
-    }
-
-    public ResponseEntity<Void> deleteAllPoints() {
-        try {
-            pointService.deleteAllPoints();
-            return new ResponseEntity<Void>(HttpStatus.OK);
-        }catch (Exception e) {
-            throw new ServerErrorException(e.getMessage());
-        }
-
-    }
-
 }
