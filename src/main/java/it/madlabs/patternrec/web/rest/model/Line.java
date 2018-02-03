@@ -5,9 +5,9 @@ package it.madlabs.patternrec.web.rest.model;
  *
  * Note:
  * the explicit form for representing lines is y = m*x + q, but we can't use it to all lines
- * because the equation of parallel lines to y axe are x = c
+ * because the equation of parallel lines to x axe are x = c
  * but we can use another equivalent equations, the implicit form, a*x + b*y + c = 0
- * in which we can represent parallel line to y as 1*x + 0*y - c = 0
+ * in which we can represent parallel line to x as 1*x + 0*y - c = 0
  * with little maths we can pass from the implicit form to explicit one as y = m*x + q => -m*x + 1 * y - q
  * in this way we can represent all possible lines
  */
