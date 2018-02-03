@@ -5,6 +5,8 @@ import it.madlabs.patternrec.web.rest.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+
 
 /**
  * Class that calculate lines based on 2 passing points
@@ -27,33 +29,25 @@ public class LineCalculator {
         if (firstPoint.equals(secondPoint)){
             return Line.IDENTITY;
         } if (firstPoint.getX().equals(secondPoint.getX())){
-            return new Line(1d, 0d, -firstPoint.getX());
+            return new Line(BigDecimal.ONE, BigDecimal.ZERO, new BigDecimal(firstPoint.getX()).negate());
         } if (firstPoint.getY().equals(secondPoint.getY())){
-            return new Line(0d, 1d, -firstPoint.getY());
+            return new Line(BigDecimal.ZERO, BigDecimal.ONE, new BigDecimal(firstPoint.getY()).negate());
         }
 
         //Extracting values from points
-        Double x1 = firstPoint.getX();
-        Double y1 = firstPoint.getY();
-        Double x2 = secondPoint.getX();
-        Double y2 = secondPoint.getY();
+        BigDecimal x1 = new BigDecimal(firstPoint.getX().toString());
+        BigDecimal y1 = new BigDecimal(firstPoint.getY().toString());
+        BigDecimal x2 = new BigDecimal(secondPoint.getX().toString());
+        BigDecimal y2 = new BigDecimal(secondPoint.getY().toString());
         log.info("calculateLine(x1:=[{}], y1:=[{}], x2:=[{}], y2:=[{}])", x1, y1, x2, y2);
-
-        Double m = calculateM(x1, y1, x2, y2);
-        Double q = calculateQ(m, x1, y1);
-        Line line = new Line(-m, 1d, -q);
+        BigDecimal a = y1.subtract(y2);
+        BigDecimal b = x2.subtract(x1);
+        BigDecimal c = x1.multiply(y2).subtract(x2.multiply(y1));
+        Line line = new Line(a, b, c);
         log.info("line:=[{}])", line);
         return line;
     }
 
-    private Double calculateM(Double x1, Double y1, Double x2, Double y2){
-        log.info("calculateM: (y2 - y1) / (x2 - x1) -> ([{}] - [{}]) / ([{}] - [{}])", y2, y1, x2, x1);
-        return (y2 - y1) / (x2 - x1);
-    }
 
-    private Double calculateQ(Double m, Double x1, Double y1){
-        log.info("calculateQ:  y1 - (m* x1) -> [{}] -([{}] * [{}])", y1, m, x1);
-        return y1 -(m* x1);
-    }
 
 }

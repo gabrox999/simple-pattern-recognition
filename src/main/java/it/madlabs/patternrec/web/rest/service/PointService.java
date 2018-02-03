@@ -43,42 +43,50 @@ public class PointService {
         if (point == null ||point.getX() == null || point.getY() == null) {
             throw new IllegalArgumentException("Wrong point data!!! Obtained: " + point);
         }
-        log.info("check if [{}] is present in main set", point);
+        log.info("check if [{}] is present in space", point);
         if (points.contains(point)){
-            log.info("point is present in set, skipping add operation");
+            log.info("point is present in space, skipping add operation");
         }else {
-            log.info("check if current point is NOT present! Calculate lines with other points and adding it to the main set!");
-            log.info("calculating lines with other point in main set");
-            calculateCollinearLinesAndAddToMap(point, points);
-            log.info("adding point to main point set");
+            log.info("current point is NOT present!");
+
+            log.info("calculating collinear points");
+            calculateCollinearPoints(point);
+
+            log.info("adding point to space");
             points.add(point);
+
             log.info("main point set:=[{}]", points);
         };
     }
 
-    public List<Line> calculateCollinearLinesAndAddToMap(Point firstpoint, Set<Point> points) {
-        List<Line> lineList = new LinkedList<>();
-        for (Point secondPoint : points) {
-            Line line = lineCalculator.calculateLine(firstpoint, secondPoint);
-            log.info("calculated [{}] line, adding point to its pointSet", line);
-            addPointToLinesPointSet(firstpoint, secondPoint, line);
-        }
-        return lineList;
-    }
-
-    private void addPointToLinesPointSet(Point firstPoint, Point secondPoint, Line line) {
-        log.info("adding points [{}, {}] to lines in map", firstPoint, secondPoint);
-        log.info("check if calculated line is in lines map");
-            Set<Point> pointSet = lineMap.get(line);
-            if (pointSet == null){
-                log.info("line was not present, creating new set for current line");
-                pointSet = new HashSet<>();
-                lineMap.put(line, pointSet);
+    public void calculateCollinearPoints(Point newPoint) {
+        Set<Point> notMatchingPointsInSpace = new HashSet<>(points);
+        Set<Line> lineSet = lineMap.keySet();
+        log.info("current lineSet has [{}] lines", lineSet.size());
+        for (Line line : lineSet) {
+            log.info("check if point [{}] belong to line [{}]", newPoint, line);
+            if (line.containsPoint(newPoint)){
+                log.info("this point belong to the line!");
+                Set<Point> pointSet = lineMap.get(line);
+                log.info("adding it to the line pointSet");
+                pointSet.add(newPoint);
+                log.info("removing all line point to not matching point in space");
+                notMatchingPointsInSpace.removeAll(pointSet);
             }
-            log.info("adding point to line pointSet");
-            pointSet.add(firstPoint);
-            pointSet.add(secondPoint);
+        }
+        log.info("current not matching point in space are [{}]", notMatchingPointsInSpace.size());
+        for (Point oldPoint : notMatchingPointsInSpace) {
+            Line line = lineCalculator.calculateLine(newPoint, oldPoint);
+            log.info("calculated [{}] line, adding point to its pointSet", line);
+
+            Set<Point> pointSet = new HashSet<>();
+            lineMap.put(line, pointSet);
+
+            log.info("adding points [{}, {}] to line [{}] in map", newPoint, oldPoint);
+            pointSet.add(oldPoint);
+            pointSet.add(newPoint);
             log.info("line:=[{}] current pointSet:=[{}]", line, pointSet);
+        }
     }
 
     public List<List<Point>> allCollinearPoints(Integer n) {

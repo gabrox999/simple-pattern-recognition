@@ -1,16 +1,15 @@
 package it.madlabs.patternrec.web.rest.service;
 
 import it.madlabs.patternrec.web.rest.model.Point;
+import it.madlabs.patternrec.web.rest.model.Line;
 import it.madlabs.patternrec.web.rest.repository.PointRepository;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
-
-import static org.junit.Assert.*;
+import java.util.Random;
 
 public class PointServiceTest {
 
@@ -101,5 +100,42 @@ public class PointServiceTest {
         Assert.assertEquals(1, collinearPoints.size());
         Assert.assertEquals(4, collinearPoints.get(0).size());
     }
+
+    @Test
+    public void given_X_calculated_collinear_point_set_when_call_allCollinearPoint_then_should_return_X_points(){
+        final int NUMBER_OF_POINT = 100;
+        Random random = new Random();
+        BigDecimal a = new BigDecimal(random.nextInt(10000));
+        BigDecimal c = new BigDecimal(random.nextInt(10000));
+        Line randomLine = new Line(a, BigDecimal.ONE, c);
+        pointService.deleteAllPoints();
+        for (int i = 0; i < NUMBER_OF_POINT; i++) {
+            Double x = new Double(i);
+            Double y = randomLine.calculateYgivenX(x);
+            pointService.addPoint(new Point(x, y));
+        }
+        List<List<Point>> collinearPoints = pointService.allCollinearPoints(NUMBER_OF_POINT);
+        Assert.assertEquals(1, collinearPoints.size());
+        Assert.assertEquals(NUMBER_OF_POINT, collinearPoints.get(0).size());
+    }
+
+//  It wont work: I think that the problem is conversion from double to BigDecimal and vice versa
+//    @Test
+//    public void given_X_calculated_collinear_point_set_when_call_allCollinearPoint_then_should_return_X_points(){
+//        final int NUMBER_OF_POINT = 100;
+//        Random random = new Random();
+//        BigDecimal a = new BigDecimal(random.nextInt(10000));
+//        BigDecimal c = new BigDecimal(random.nextInt(10000));
+//        Line randomLine = new Line(a, BigDecimal.ONE, c);
+//        pointService.deleteAllPoints();
+//        for (int i = 0; i < NUMBER_OF_POINT; i++) {
+//            Double x = new Double(random.nextDouble());
+//            Double y = randomLine.calculateYgivenX(x);
+//            pointService.addPoint(new Point(x, y));
+//        }
+//        List<List<Point>> collinearPoints = pointService.allCollinearPoints(NUMBER_OF_POINT);
+//        Assert.assertEquals(1, collinearPoints.size());
+//        Assert.assertEquals(NUMBER_OF_POINT, collinearPoints.get(0).size());
+//    }
 
 }

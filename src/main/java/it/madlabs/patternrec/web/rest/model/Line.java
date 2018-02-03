@@ -1,5 +1,8 @@
 package it.madlabs.patternrec.web.rest.model;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 /**
  * Abstract a Line based on implicit formula: ax + by + c = 0
  *
@@ -13,13 +16,13 @@ package it.madlabs.patternrec.web.rest.model;
  */
 public class Line{
 
-    public static final Line IDENTITY = new Line(0d,0d, 0d);
+    public static final Line IDENTITY = new Line(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
 
-    private final double a;
-    private final double b;
-    private final double c;
+    private final BigDecimal a;
+    private final BigDecimal b;
+    private final BigDecimal c;
 
-    public Line(double a, double b, double c) {
+    public Line(BigDecimal a, BigDecimal b, BigDecimal c) {
         this.a = a;
         this.b = b;
         this.c = c;
@@ -32,21 +35,16 @@ public class Line{
 
         Line line = (Line) o;
 
-        if (line.a != a) return false;
-        if (line.b != b) return false;
-        return line.c == c;
+        if (a != null ? !a.equals(line.a) : line.a != null) return false;
+        if (b != null ? !b.equals(line.b) : line.b != null) return false;
+        return c != null ? c.equals(line.c) : line.c == null;
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        temp = Double.doubleToLongBits(a);
-        result = (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(b);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(c);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        int result = a != null ? a.hashCode() : 0;
+        result = 31 * result + (b != null ? b.hashCode() : 0);
+        result = 31 * result + (c != null ? c.hashCode() : 0);
         return result;
     }
 
@@ -57,5 +55,17 @@ public class Line{
                 ", b=" + b +
                 ", c=" + c +
                 '}';
+    }
+
+    public boolean containsPoint(Point point) {
+        BigDecimal xBD = new BigDecimal(point.getX());
+        BigDecimal yBD = new BigDecimal(point.getY());
+        return a.multiply(xBD).add(b.multiply(yBD)).add(c).stripTrailingZeros().equals(BigDecimal.ZERO);
+    }
+
+    public Double calculateYgivenX(double x) {
+        BigDecimal xBD = new BigDecimal(x);
+        //ax + by + c = 0 => y = - (ax + c) / ba.multiply(xBD).add(b.multiply(yBD)).add(c)
+        return a.multiply(xBD).add(c).negate().divide(b).doubleValue();
     }
 }

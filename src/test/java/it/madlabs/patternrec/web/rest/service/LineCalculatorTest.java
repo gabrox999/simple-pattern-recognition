@@ -6,6 +6,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 
 public class LineCalculatorTest {
 
@@ -21,21 +23,21 @@ public class LineCalculatorTest {
 
     @Test
     public void given_1_1_and_2_2_point_when_calculateLine_then_should_return_Line_with_m1_1_0(){
-        Line expected = new Line(-1d,1d, 0d);
+        Line expected = new Line(BigDecimal.ONE.negate(), BigDecimal.ONE, BigDecimal.ZERO);
         Line actual = lineCalculator.calculateLine(new Point(1d, 1d), new Point(2d, 2d));
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     public void given_x1_eq_x2_eq_1_points_when_calculateLine_then_should_return_XParallelLive_with_value_1(){
-        Line expected = new Line(1d, 0d, -1d);
+        Line expected = new Line(BigDecimal.ONE, BigDecimal.ZERO, BigDecimal.ONE.negate());
         Line actual = lineCalculator.calculateLine(new Point(1d, 1d), new Point(1d, 2d));
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     public void given_y1_eq_y2_eq_1_points_when_calculateLine_then_should_return_YParallelLive_with_value_1(){
-        Line expected = new Line(0d, 1d, -1d);
+        Line expected = new Line(BigDecimal.ZERO, BigDecimal.ONE, BigDecimal.ONE.negate());
         Line actual = lineCalculator.calculateLine(new Point(1d, 1d), new Point(2d, 1d));
         Assert.assertEquals(expected, actual);
     }
